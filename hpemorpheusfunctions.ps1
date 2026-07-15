@@ -34,7 +34,7 @@ function Get-MorpheusTenants {
     )
 
     $httenants = @{ }
-    $url = $morpheushosturl + "/api/accounts"
+    $url = $morpheushosturl + "api/accounts"
     $response = ((Invoke-WebRequest -Uri $url -Method get -Headers $headers -SkipCertificateCheck).Content | ConvertFrom-Json).accounts
 
     foreach ($tenant in $response) {
@@ -55,7 +55,7 @@ function Get-MorpheusClouds {
     )
 
     $htzones = @{ }
-    $url = $morpheushosturl + "/api/zones"
+    $url = $morpheushosturl + "api/zones"
     $response = ((Invoke-WebRequest -Uri $url -Method get -Headers $headers -SkipCertificateCheck).Content | ConvertFrom-Json).accounts
 
     foreach ($zone in $response) {
@@ -75,7 +75,7 @@ function Get-MorpheusZonesbyId {
         $morpheushosturl
     )
     $htzones = @{ }
-    $url = $morpheushosturl + "/api/zones"
+    $url = $morpheushosturl + "api/zones"
     write-output $url
 
     $response = ((Invoke-WebRequest -Uri $url -Method get -Headers $headers -SkipCertificateCheck).Content | ConvertFrom-Json -AsHashtable).zones
@@ -97,7 +97,7 @@ function Get-MorpheusRoles {
     )
 
     $htroles = @{ }
-    $url = $morpheushosturl + "/api/roles"
+    $url = $morpheushosturl + "api/roles"
     try {
         $response = ((Invoke-WebRequest -Uri $url -Method get -Headers $headers -SkipCertificateCheck).Content | ConvertFrom-Json).roles
         foreach ($role in $response) {
@@ -155,7 +155,7 @@ function New-MorpheusTenant {
     }
 
     $json = $body | ConvertTo-Json -Depth 5
-    $url = $morpheushosturl + "/api/accounts"
+    $url = $morpheushosturl + "api/accounts"
     try {
         $response = Invoke-WebRequest -Uri $url -Method post -Headers $headers -Body $json -SkipCertificateCheck
     }
@@ -180,7 +180,7 @@ function Remove-MorpheusTenant {
         $tenantid
     )
     write-output $tenantid
-    $url = $morpheushosturl + "/api/accounts/$($tenantid)?removeResources=false"
+    $url = $morpheushosturl + "api/accounts/$($tenantid)?removeResources=false"
     write-output $url
     $response = Invoke-WebRequest -Uri $url -Method DELETE -Headers $headers -SkipCertificateCheck
 
@@ -199,7 +199,7 @@ function Get-MorpheusResourcePools {
         $morpheushosturl
     )
     $htrespools = @{ }
-    $url = $morpheushosturl + "/api/zones/$zoneid/resource-pools"
+    $url = $morpheushosturl + "api/zones/$zoneid/resource-pools"
     write-output $url
     $response = ((Invoke-WebRequest -Uri $url -Method get -Headers $headers -SkipCertificateCheck).Content | ConvertFrom-Json).resourcePools
 
@@ -219,7 +219,7 @@ function Get-MorpheusZones {
         $morpheushosturl
     )
     $htzones = @{ }
-    $url = $morpheushosturl + "/api/zones"
+    $url = $morpheushosturl + "api/zones"
     write-output $url
 
     $response = ((Invoke-WebRequest -Uri $url -Method get -Headers $headers -SkipCertificateCheck).Content | ConvertFrom-Json -AsHashtable).zones
@@ -242,7 +242,7 @@ function Get-MorpheusFolders {
         $zoneid
     )
     $htfolders = @{ }
-    $url = $morpheushosturl + "/api/zones/$zoneid/folders"
+    $url = $morpheushosturl + "api/zones/$zoneid/folders"
     $response = ((Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck).Content | ConvertFrom-Json).folders
     write-output $response
     foreach ($resource in $response) {
@@ -269,7 +269,7 @@ function Refresh-MorpheusCloud {
         mode = $mode
     }
 
-    $url = $morpheushosturl + "/api/zones/$zoneid/refresh"
+    $url = $morpheushosturl + "api/zones/$zoneid/refresh"
     $json = $body | ConvertTo-Json
     $response = Invoke-WebRequest -Uri $url -Method post -Headers $headers -Body $json -SkipCertificateCheck
 }
@@ -323,7 +323,7 @@ function Set-MorpheusCloudFolderPermissions {
 
     my-logger "$($body.folder.tenants)"
     $json = $body | ConvertTo-Json -Depth 5
-    $url = $morpheushosturl + "/api/zones/$zoneid/folders/$morpheusfolderid"
+    $url = $morpheushosturl + "api/zones/$zoneid/folders/$morpheusfolderid"
     my-logger $url
 
     $response = Invoke-WebRequest -Uri $url -Method PUT -Headers $headers -Body $json -SkipCertificateCheck
@@ -361,7 +361,7 @@ function New-MorpheusUser {
     $ob | Add-Member -MemberType NoteProperty id -Value "$($roleid)"
     $roles += $ob
 
-    $url = $morpheushosturl + "/api/users?accountId=$($tenantid)"
+    $url = $morpheushosturl + "api/users?accountId=$($tenantid)"
     $body = @{
         user = @{
             receiveNotifications = "true"
@@ -432,7 +432,7 @@ function Set-MorpheusCloudResPoolPermissions {
     }
 
     $json = $body | ConvertTo-Json -Depth 5
-    $url = $morpheushosturl + "/api/zones/$zoneid/resource-pools/$morpheusrespoolid"
+    $url = $morpheushosturl + "api/zones/$zoneid/resource-pools/$morpheusrespoolid"
     write-output $url
     $response = Invoke-WebRequest -Uri $url -Method PUT -Headers $headers -Body $json -SkipCertificateCheck
     $return = ($response.Content | ConvertFrom-Json).resourcePool
@@ -451,7 +451,7 @@ function get-tenantrole {
         $morpheushosturl,
         $tenantid
     )
-    $url = $morpheushosturl + "/api/users//available-roles?accountId=$($tenantid)"
+    $url = $morpheushosturl + "api/users//available-roles?accountId=$($tenantid)"
     write-output $url
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     $return = ($response.Content | ConvertFrom-Json -AsHashtable).roles
@@ -472,7 +472,7 @@ function update-tenantrole {
         $roleid
     )
 
-    $url = $morpheushosturl + "/api/roles/$roleid/update-group"
+    $url = $morpheushosturl + "api/roles/$roleid/update-group"
     write-output "URL: $url"
     $Body = @{
         group = @{
@@ -498,7 +498,7 @@ function update-rolepermissions {
         $roleid
     )
 
-    $url = $morpheushosturl + "/api/roles/$roleid/update-permission"
+    $url = $morpheushosturl + "api/roles/$roleid/update-permission"
 
     # Define the hash table
     $permission = @{
@@ -525,7 +525,7 @@ function Get-MorpheusTenantGroups {
         $tenantid
     )
 
-    $url = $morpheushosturl + "/api/accounts/$tenantid/groups"
+    $url = $morpheushosturl + "api/accounts/$tenantid/groups"
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     $return = ($response.Content | ConvertFrom-Json -AsHashtable).groups
     return $return
@@ -545,7 +545,7 @@ function Remove-MorpheusTenantGroup {
         $groupid
     )
 
-    $url = $morpheushosturl + "/api/accounts/$tenantid/groups/$groupid"
+    $url = $morpheushosturl + "api/accounts/$tenantid/groups/$groupid"
     $response = Invoke-WebRequest -Uri $url -Method DELETE -Headers $headers -SkipCertificateCheck
     return $response
 }
@@ -582,7 +582,7 @@ function New-MorpheusTenantGroup {
     }
 
     $json = $body | ConvertTo-Json -Depth 5
-    $url = $morpheushosturl + "/api/accounts/$tenantid/groups"
+    $url = $morpheushosturl + "api/accounts/$tenantid/groups"
     $response = Invoke-WebRequest -Uri $url -Method POST -Headers $headers -Body $json -SkipCertificateCheck
     return $response
 }
@@ -615,7 +615,7 @@ function Add-MorpheusTenantGroupZone {
     }
 
     $json = $body | ConvertTo-Json -Depth 5
-    $url = $morpheushosturl + "/api/accounts/$tenantid/groups/$groupid/update-zones"
+    $url = $morpheushosturl + "api/accounts/$tenantid/groups/$groupid/update-zones"
     $response = Invoke-WebRequest -Uri $url -Method PUT -Headers $headers -Body $json -SkipCertificateCheck
     return $response
 }
@@ -667,7 +667,7 @@ function New-MorpheusVCenterCloud {
         $inventory = "off"
     }
     # Morpheus API Base URL
-    $baseUri = "$morpheushostUrl/api"
+    $baseUri = "$($morpheushostUrl)api"
 
     # Construct the body for the POST request to create a vCenter cloud
     $body = @{
@@ -805,7 +805,7 @@ function get-morcloudnetworks {
         $cloudid
     )
 
-    $url = $morpheushosturl + "/api/networks?max=500&zoneId=$cloudid"
+    $url = $morpheushosturl + "api/networks?max=500&zoneId=$cloudid"
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     return $response.content | convertfrom-json
 }
@@ -834,7 +834,7 @@ function disable-morcloudnetworks {
 
     $jsonbody = $body | convertto-json -Depth 9
 
-    $url = $morpheushosturl + "/api/networks/$networkid"
+    $url = $morpheushosturl + "api/networks/$networkid"
     $response = Invoke-WebRequest -Uri $url -Method PUT -Headers $headers -ContentType 'application/json' -Body '{"network":{"visibility":"private","tenants":[{"id":1}],"active":false}}' -SkipCertificateCheck
     return $response
 }
@@ -850,7 +850,7 @@ function get-morcloudDatastores {
         $headers,
         $cloudid
     )
-    $url = $morpheushosturl + "/api/zones/$cloudid/data-stores?max=500"
+    $url = $morpheushosturl + "api/zones/$cloudid/data-stores?max=500"
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     return $response.content | convertfrom-json
 }
@@ -868,7 +868,7 @@ function disable-morclouddatastores {
         [string]$datastoreid,
         $cloudid
     )
-    $url = $morpheushosturl + "/api/zones/$cloudid/data-stores/$datastoreid"
+    $url = $morpheushosturl + "api/zones/$cloudid/data-stores/$datastoreid"
     $response = Invoke-WebRequest -Uri $url -Method PUT -Headers $headers -ContentType 'application/json' -Body '{"datastore":{"visibility":"private","resourcePermissions":{"all":true,"allPlans":true},"tenantPermissions":[{"accounts":[1]}],"active":false}}' -SkipCertificateCheck
     return $response
 }
@@ -884,7 +884,7 @@ function get-morCloudFolders {
         $headers,
         $cloudid
     )
-    $url = $morpheushosturl + "/api/zones/$cloudid/folders?max=500"
+    $url = $morpheushosturl + "api/zones/$cloudid/folders?max=500"
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     return $response.content | convertfrom-json
 }
@@ -902,7 +902,7 @@ function get-morCloudTenantFolder{
         $cloudid,
         $foldername
     )
-    $url = $morpheushosturl + "/api/zones/$cloudid/folders?max=1&name=$($foldername)"
+    $url = $morpheushosturl + "api/zones/$cloudid/folders?max=1&name=$($foldername)"
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     return $response.content | convertfrom-json
 }
@@ -920,7 +920,7 @@ function disable-morCloudFolders {
         [string]$folderid,
         $cloudid
     )
-    $url = $morpheushosturl + "/api/zones/$cloudid/folders/$folderid"
+    $url = $morpheushosturl + "api/zones/$cloudid/folders/$folderid"
     $response = Invoke-WebRequest -Uri $url -Method PUT -Headers $headers -ContentType 'application/json' -Body '{"folder":{"defaultFolder":false,"defaultImage":false,"visibility":"private","resourcePermissions":{"all":true,"allPlans":true},"active":false,"tenantPermissions":[{"accounts":[1]}]}}' -SkipCertificateCheck
     return $response
 }
@@ -938,7 +938,7 @@ function get-morcloudTenantnetworks {
         $tenantname,
         $cloudid
     )
-    $url = $morpheushosturl + "/api/networks?phrase=$tenantname&zoneId=$cloudid"
+    $url = $morpheushosturl + "api/networks?phrase=$tenantname&zoneId=$cloudid"
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     return $response.content | convertfrom-json
 }
@@ -959,7 +959,7 @@ function set-morcloudnetworkpermisions {
         $tenantid
     )
 
-    $url = $morpheushosturl + "/api/zones/$cloudid/networks/$networkid"
+    $url = $morpheushosturl + "api/zones/$cloudid/networks/$networkid"
     $response = Invoke-WebRequest -Uri $url -Method PUT -Headers $headers -ContentType 'application/json' -Body "{'network':{'visibility':'private','tenants':[{'id':$($tenantid)}],'active':true}}" -SkipCertificateCheck
     return $response
 }
@@ -977,7 +977,7 @@ function get-morcloudtenantdatastores {
         $tenantname,
         $cloudid
     )
-    $url = $morpheushosturl + "/api/zones/$cloudid/data-stores?phrase=$tenantname"
+    $url = $morpheushosturl + "api/zones/$cloudid/data-stores?phrase=$tenantname"
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     return $response.content | convertfrom-json
 }
@@ -1002,7 +1002,7 @@ function set-morclouddatastorepermisions {
     $tenantArray = $ids | ForEach-Object { "{`"id`":$_}" }
     $json = "{`"datastore`":{`"visibility`":`"private`",`"tenants`":[ $($tenantArray -join ',') ],`"active`":false}}"
 
-    $url = $morpheushosturl + "/api/zones/$cloudid/data-stores/$datastoreid"
+    $url = $morpheushosturl + "api/zones/$cloudid/data-stores/$datastoreid"
     $response = Invoke-WebRequest -Uri $url -Method Put -Headers $headers -ContentType 'application/json' -Body $json -SkipCertificateCheck
     return ($response.content | convertfrom-json).datastore
 }
@@ -1019,7 +1019,7 @@ function get-morcredential {
         $id
     )
 
-    $url = $morpheushosturl + "/api/credentials/$id"
+    $url = $morpheushosturl + "api/credentials/$id"
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     return $response.content | convertfrom-json
 }
@@ -1034,7 +1034,7 @@ function get-morcredentials {
         $headers
     )
 
-    $url = $morpheushosturl + "/api/credentials/"
+    $url = $morpheushosturl + "api/credentials/"
     $response = Invoke-WebRequest -Uri $url -Method GET -Headers $headers -SkipCertificateCheck
     return $response.content | convertfrom-json
 }
