@@ -346,10 +346,10 @@ function Set-MorpheusCloudFolderPermissions {
         }
     }
 
-    my-logger "$($body.folder.tenants)"
+    My-Logger "Updating folder permissions for tenant '$tenantname' (ID: $tenantid)"
     $json = $body | ConvertTo-Json -Depth 5
     $url = $morpheushosturl + "api/zones/$zoneid/folders/$morpheusfolderid"
-    my-logger $url
+    My-Logger "Request URL: $url"
     $response = Invoke-WebRequest -Uri $url -Method PUT -Headers $headers -Body $json -SkipCertificateCheck
     $return = ($response.Content | ConvertFrom-Json).folder
 
